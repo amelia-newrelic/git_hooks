@@ -80,7 +80,7 @@ class PreCommitHandler
     def file_types
       {
         rb: {
-          breakpoints: ["binding.pry", "debugger"],
+          breakpoints: ["binding.pry", "debugger", "byebug"],
           comment: ["#"]
         },
         js: {

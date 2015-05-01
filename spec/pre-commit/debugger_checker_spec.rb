@@ -68,6 +68,27 @@ describe PreCommitHandler do
       end
     end
 
+    describe "with byebug" do
+      before :each do
+        allow_any_instance_of(Object).to receive(:`).with("git show :file.rb").and_return("dsafa byebug")
+      end
+
+      it "will fail" do
+        message=<<-EOF.strip_heredoc
+        ****************************************
+        Your attempt to COMMIT was rejected
+
+        File \e[31m./file.rb\e[39m contains byebug
+
+        If you still want to commit then you need to ignore the pre_commit git hook by executing following command.
+        git commit --no-verify OR git commit -n
+        ****************************************
+        EOF
+        allow(File).to receive(:file?).with(anything).and_return(true)
+        expect(STDOUT).to receive(:puts).with(message.chomp)
+        expect {handler.handle}.to raise_error SystemExit
+      end
+    end
 
   end
 
